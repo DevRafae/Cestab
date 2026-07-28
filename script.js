@@ -1,25 +1,30 @@
-// --- IMPORTAÇÕES DO FIREBASE ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 
-// SUAS CONFIGURAÇÕES DO FIREBASE (Substitua pelos dados do seu projeto)
+// Suas credenciais reais do Firebase
 const firebaseConfig = {
-    apiKey: "SUA_API_KEY",
-    authDomain: "SEU_AUTH_DOMAIN",
-    projectId: "SEU_PROJECT_ID",
-    storageBucket: "SEU_STORAGE_BUCKET",
-    messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-    appId: "SEU_APP_ID"
+    apiKey: "AIzaSyBEZG1_x1_DvaoE8DMm5Ni1r2ntl0cwnC0",
+    authDomain: "cesta-b.firebaseapp.com",
+    projectId: "cesta-b",
+    storageBucket: "cesta-b.firebasestorage.app",
+    messagingSenderId: "387760959485",
+    appId: "1:387760959485:web:3a4c4fdef7964876edf394",
+    measurementId: "G-1BRL7NELCE"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+let db = null;
+try {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    getAnalytics(app);
+} catch (e) {
+    console.warn("Erro ao iniciar o Firebase:", e);
+}
 
-// Estado Global da Aplicação
 let cestaAtualAtiva = 1;
 let cestaVisualizadaAdmin = 1;
 
-// Modelo padrão caso o banco esteja vazio
 const modeloDadosCestas = {
     1: {
         itens: [
@@ -46,26 +51,24 @@ const modeloDadosCestas = {
 
 let dadosCestas = JSON.parse(JSON.stringify(modeloDadosCestas));
 
-// --- CARREGAR DO FIREBASE ---
 async function carregarDadosDoBanco() {
+    if (!db) return;
     try {
         const docRef = doc(db, "sistema", "cestasData");
         const docSnap = await getDoc(docRef);
-
         if (docSnap.exists()) {
             dadosCestas = docSnap.data();
         } else {
-            // Se não existir, salva o modelo inicial no Firebase
             await setDoc(docRef, modeloDadosCestas);
         }
     } catch (e) {
-        console.warn("Erro ao carregar do Firebase, usando dados locais.", e);
+        console.warn("Erro ao carregar do Firebase.", e);
     }
     atualizarStatusGeral();
 }
 
-// --- SALVAR NO FIREBASE ---
 async function salvarDadosNoBanco() {
+    if (!db) return;
     try {
         await setDoc(doc(db, "sistema", "cestasData"), dadosCestas);
     } catch (e) {
@@ -73,20 +76,12 @@ async function salvarDadosNoBanco() {
     }
 }
 
-// Navegação entre Telas
 function mudarTela(idTela) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const telaAlvo = document.getElementById(idTela);
     if (telaAlvo) telaAlvo.classList.add('active');
 }
 
-function voltarTela(num) {
-    if(num === 1) mudarTela('tela1');
-    if(num === 3) mudarTela('tela3');
-    atualizarStatusGeral();
-}
-
-// Verificações de Status e Desbloqueio Sequencial
 function verificarCestaCompleta(numCesta) {
     let itens = dadosCestas[numCesta].itens;
     return itens.every(item => item.atual >= item.meta);
@@ -96,7 +91,6 @@ function atualizarStatusGeral() {
     let c1Completa = verificarCestaCompleta(1);
     let c2Completa = verificarCestaCompleta(2);
 
-    // Desbloqueio Cesta 2
     let card2 = document.getElementById('cardCesta2');
     let lock2 = document.getElementById('lockCesta2');
     let lockLista2 = document.getElementById('lockLista2');
@@ -112,7 +106,6 @@ function atualizarStatusGeral() {
         }
     }
 
-    // Desbloqueio Cesta 3
     let card3 = document.getElementById('cardCesta3');
     let lock3 = document.getElementById('lockCesta3');
     let lockLista3 = document.getElementById('lockLista3');
@@ -129,7 +122,7 @@ function atualizarStatusGeral() {
     }
 }
 
-window.abrirCesta = function(num) {
+function abrirCesta(num) {
     if(num === 2 && !verificarCestaCompleta(1)) {
         alert('A Cesta 1 ainda não está completa!');
         return;
@@ -143,9 +136,8 @@ window.abrirCesta = function(num) {
     if(titulo) titulo.innerText = `Cesta ${num}`;
     renderizarItensCestaAtiva();
     mudarTela('tela2');
-};
+}
 
-// Renderização dos Itens na Tela 2
 function renderizarItensCestaAtiva() {
     let container = document.getElementById('containerItensCesta');
     if(!container) return;
@@ -163,22 +155,22 @@ function renderizarItensCestaAtiva() {
         let completo = item.atual >= item.meta;
         let div = document.createElement('div');
         div.className = 'item-row';
+        div.style.marginBottom = '10px';
         div.innerHTML = `
-            <div class="item-row-top">
-                <div class="item-info">
+            <div class="item-row-top" style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="item-info" style="display:flex; align-items:center; gap:8px;">
                     <input type="checkbox" class="check-item" value="${item.id}" ${completo ? 'disabled' : ''}>
                     <span>${item.nome}</span>
                 </div>
                 <span>${item.atual}/${item.meta}</span>
             </div>
-            ${completo ? '<div class="item-status-msg">Já completamos a quantidade deste item! Você pode contribuir com outro item ou aguardar a abertura da próxima cesta.</div>' : ''}
+            ${completo ? '<div class="item-status-msg" style="font-size:12px; color:green;">Item já completado!</div>' : ''}
         `;
         container.appendChild(div);
     });
 }
 
-// Registrar Contribuição
-window.registrarContribuicao = async function() {
+async function registrarContribuicao() {
     let inputNome = document.getElementById('nomeColaborador');
     let nome = inputNome ? inputNome.value.trim() : '';
     if(!nome) {
@@ -224,26 +216,9 @@ window.registrarContribuicao = async function() {
     
     let modal = document.getElementById('modalPopup');
     if(modal) modal.style.display = 'flex';
-};
+}
 
-window.fecharModal = function() {
-    let modal = document.getElementById('modalPopup');
-    if(modal) modal.style.display = 'none';
-};
-
-// Acesso Admin
-window.tentarAdmin = function() {
-    let senha = prompt('Digite a senha do Administrador:');
-    if(senha === '1234') {
-        atualizarStatusGeral();
-        cestaVisualizadaAdmin = 1;
-        mudarTela('tela3');
-    } else if(senha !== null) {
-        alert('Senha incorreta!');
-    }
-};
-
-window.verDetalhesCestaAdmin = function(num) {
+function verDetalhesCestaAdmin(num) {
     if(num === 2 && !verificarCestaCompleta(1)) {
         alert('Cesta bloqueada.');
         return;
@@ -257,7 +232,7 @@ window.verDetalhesCestaAdmin = function(num) {
     if(tituloT4) tituloT4.innerText = `Gerenciamento - Cesta ${num}`;
     renderizarListaContribuicoesAdmin();
     mudarTela('tela4');
-};
+}
 
 function renderizarListaContribuicoesAdmin() {
     let container = document.getElementById('containerContribuicoesLista');
@@ -266,52 +241,87 @@ function renderizarListaContribuicoesAdmin() {
 
     let contribuicoes = dadosCestas[cestaVisualizadaAdmin].contribuicoes;
     if(contribuicoes.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:var(--cinza-chumbo); margin-top:20px;">Nenhuma contribuição registrada nesta cesta ainda.</p>';
+        container.innerHTML = '<p style="text-align:center; color:#666; margin-top:20px;">Nenhuma contribuição registrada nesta cesta ainda.</p>';
         return;
     }
 
     contribuicoes.forEach(c => {
         let div = document.createElement('div');
         div.className = 'contribution-list-item';
+        div.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:#f9f9f9; padding:8px; margin-bottom:5px; border-radius:5px;";
         div.innerHTML = `
             <span><b>${c.nome}</b> - ${c.item}</span>
-            <button onclick="removerItemContribuicao(${c.idUnico})" style="background:none; border:none; color:red; cursor:pointer; font-weight:bold; font-size: 16px;">❌</button>
+            <button class="btn-remover" data-id="${c.idUnico}" style="background:none; border:none; color:red; cursor:pointer; font-weight:bold; font-size: 16px;">❌</button>
         `;
         container.appendChild(div);
     });
+
+    container.querySelectorAll('.btn-remover').forEach(btn => {
+        btn.addEventListener('click', async function() {
+            let idUnico = Number(this.getAttribute('data-id'));
+            if(!confirm('Deseja remover este item da lista?')) return;
+            
+            let dados = dadosCestas[cestaVisualizadaAdmin];
+            let index = dados.contribuicoes.findIndex(item => item.idUnico === idUnico);
+            if(index !== -1) {
+                let itemRemovido = dados.contribuicoes[index];
+                let nomeItemBase = itemRemovido.item.split('-')[0].trim();
+                let itemObj = dados.itens.find(i => i.nome.includes(nomeItemBase));
+                if(itemObj && itemObj.atual > 0) {
+                    itemObj.atual -= 1;
+                }
+                dados.contribuicoes.splice(index, 1);
+                await salvarDadosNoBanco();
+                renderizarListaContribuicoesAdmin();
+                atualizarStatusGeral();
+            }
+        });
+    });
 }
 
-window.removerItemContribuicao = async function(idUnico) {
-    if(!confirm('Deseja remover este item da lista?')) return;
-    
-    let dados = dadosCestas[cestaVisualizadaAdmin];
-    let index = dados.contribuicoes.findIndex(c => c.idUnico === idUnico);
-    if(index !== -1) {
-        let itemRemovido = dados.contribuicoes[index];
-        let nomeItemBase = itemRemovido.item.split('-')[0].trim();
-        let itemObj = dados.itens.find(i => i.nome.includes(nomeItemBase));
-        if(itemObj && itemObj.atual > 0) {
-            itemObj.atual -= 1;
+document.addEventListener("DOMContentLoaded", () => {
+    carregarDadosDoBanco();
+
+    document.getElementById('btnCesta1')?.addEventListener('click', () => abrirCesta(1));
+    document.getElementById('cardCesta2')?.addEventListener('click', () => abrirCesta(2));
+    document.getElementById('cardCesta3')?.addEventListener('click', () => abrirCesta(3));
+
+    document.getElementById('btnAdmin')?.addEventListener('click', () => {
+        let senha = prompt('Digite a senha do Administrador:');
+        if(senha === '1234') {
+            atualizarStatusGeral();
+            cestaVisualizadaAdmin = 1;
+            mudarTela('tela3');
+        } else if(senha !== null) {
+            alert('Senha incorreta!');
         }
-        dados.contribuicoes.splice(index, 1);
-        await salvarDadosNoBanco();
-        renderizarListaContribuicoesAdmin();
-        atualizarStatusGeral();
-    }
-};
+    });
 
-window.resetarCestaAtual = async function() {
-    if(confirm('Tem certeza absoluta que deseja resetar todos os itens e contribuições desta cesta?')) {
-        let dados = dadosCestas[cestaVisualizadaAdmin];
-        dados.contribuicoes = [];
-        dados.itens.forEach(i => i.atual = 0);
-        await salvarDadosNoBanco();
-        renderizarListaContribuicoesAdmin();
-        atualizarStatusGeral();
-        alert('Cesta resetada com sucesso!');
-    }
-};
+    document.getElementById('btnRegistrar')?.addEventListener('click', registrarContribuicao);
+    
+    document.getElementById('btnVoltarTela2')?.addEventListener('click', () => mudarTela('tela1'));
+    document.getElementById('btnVoltarTela3')?.addEventListener('click', () => mudarTela('tela1'));
+    document.getElementById('btnVoltarTela4')?.addEventListener('click', () => mudarTela('tela3'));
 
-// No HTML, certifique-se de carregar o script como type="module" para o Firebase funcionar:
-// <script type="module" src="script.js"></script>
-carregarDadosDoBanco();
+    document.getElementById('btnAdminCesta1')?.addEventListener('click', () => verDetalhesCestaAdmin(1));
+    document.getElementById('btnAdminCesta2')?.addEventListener('click', () => verDetalhesCestaAdmin(2));
+    document.getElementById('btnAdminCesta3')?.addEventListener('click', () => verDetalhesCestaAdmin(3));
+
+    document.getElementById('btnResetar')?.addEventListener('click', async () => {
+        if(confirm('Tem certeza absoluta que deseja resetar todos os itens e contribuições desta cesta?')) {
+            let dados = dadosCestas[cestaVisualizadaAdmin];
+            dados.contribuicoes = [];
+            dados.itens.forEach(i => i.atual = 0);
+            await salvarDadosNoBanco();
+            renderizarListaContribuicoesAdmin();
+            atualizarStatusGeral();
+            alert('Cesta resetada com sucesso!');
+        }
+    });
+
+    document.getElementById('btnFecharModal')?.addEventListener('click', () => {
+        let modal = document.getElementById('modalPopup');
+        if(modal) modal.style.display = 'none';
+        mudarTela('tela1');
+    });
+});
