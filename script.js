@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 
-// Suas credenciais reais do Firebase
+// Suas credenciais oficiais do Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyBEZG1_x1_DvaoE8DMm5Ni1r2ntl0cwnC0",
     authDomain: "cesta-b.firebaseapp.com",
@@ -16,8 +16,8 @@ const firebaseConfig = {
 let db = null;
 try {
     const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    getAnalytics(app);
+    db = getFirestore(app); // Inicializa o banco de dados
+    getAnalytics(app);      // Inicializa o analytics
 } catch (e) {
     console.warn("Erro ao iniciar o Firebase:", e);
 }
