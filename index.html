@@ -14,14 +14,14 @@
     <div id="tela1" class="screen active">
         <h2>Montagem de cestas básicas</h2>
         
-        <div class="menu-card" onclick="abrirCesta(1)">
+        <div class="menu-card" id="btnCesta1">
             <div class="menu-card-left">
                 <span class="menu-icon">📦</span>
                 <span>Cesta 1</span>
             </div>
         </div>
 
-        <div class="menu-card locked" id="cardCesta2" onclick="abrirCesta(2)">
+        <div class="menu-card locked" id="cardCesta2">
             <div class="menu-card-left">
                 <span class="menu-icon">📦</span>
                 <span>Cesta 2</span>
@@ -29,7 +29,7 @@
             <span id="lockCesta2">⏱️</span>
         </div>
 
-        <div class="menu-card locked" id="cardCesta3" onclick="abrirCesta(3)">
+        <div class="menu-card locked" id="cardCesta3">
             <div class="menu-card-left">
                 <span class="menu-icon">📦</span>
                 <span>Cesta 3</span>
@@ -44,7 +44,7 @@
             </div>
         </div>
 
-        <div class="menu-card" onclick="tentarAdmin()" style="margin-top: auto;">
+        <div class="menu-card" id="btnAdmin" style="margin-top: auto;">
             <div class="menu-card-left">
                 <span class="menu-icon">⚙️</span>
                 <span>Painel Admin (Gerenciar)</span>
@@ -65,22 +65,22 @@
 
         <input type="text" id="nomeColaborador" placeholder="Digite o seu nome:">
         
-        <button class="btn-primary" onclick="registrarContribuicao()">Registrar a contribuição</button>
-        <button class="home-icon-btn" onclick="voltarTela(1)">🏠</button>
+        <button class="btn-primary" id="btnRegistrar">Registrar a contribuição</button>
+        <button class="btn-secondary" id="btnVoltarTela2" style="margin-top: 8px; width: 100%; padding: 12px; font-weight: bold; background: #e0e0e0; border: none; border-radius: 8px; cursor: pointer;">Página Inicial</button>
     </div>
 
     <!-- TELA 3: Menu Admin -->
     <div id="tela3" class="screen">
         <h2>Painel Admin - Lista de Cestas</h2>
         
-        <div class="menu-card" onclick="verDetalhesCestaAdmin(1)">
+        <div class="menu-card" id="btnAdminCesta1">
             <div class="menu-card-left">
                 <span class="menu-icon">📋</span>
                 <span>Gerenciar Cesta 1</span>
             </div>
         </div>
 
-        <div class="menu-card" onclick="verDetalhesCestaAdmin(2)">
+        <div class="menu-card" id="btnAdminCesta2">
             <div class="menu-card-left">
                 <span class="menu-icon">📋</span>
                 <span>Gerenciar Cesta 2</span>
@@ -88,7 +88,7 @@
             <span id="lockLista2">⏱️</span>
         </div>
 
-        <div class="menu-card" onclick="verDetalhesCestaAdmin(3)">
+        <div class="menu-card" id="btnAdminCesta3">
             <div class="menu-card-left">
                 <span class="menu-icon">📋</span>
                 <span>Gerenciar Cesta 3</span>
@@ -96,7 +96,7 @@
             <span id="lockLista3">⏱️</span>
         </div>
 
-        <button class="home-icon-btn" style="margin-top: auto;" onclick="voltarTela(1)">🏠</button>
+        <button class="btn-secondary" id="btnVoltarTela3" style="margin-top: auto; width: 100%; padding: 12px; font-weight: bold; background: #e0e0e0; border: none; border-ries: 8px; cursor: pointer;">Página Inicial</button>
     </div>
 
     <!-- TELA 4: Detalhes Admin / Lista de Contribuições -->
@@ -105,22 +105,21 @@
         
         <div id="containerContribuicoesLista" style="flex: 1; overflow-y: auto; margin-bottom: 12px;"></div>
 
-        <button class="btn-danger" onclick="resetarCestaAtual()">Resetar itens da cesta</button>
-        <button class="home-icon-btn" onclick="voltarTela(3)">🏠</button>
+        <button class="btn-danger" id="btnResetar">Resetar itens da cesta</button>
+        <button class="btn-secondary" id="btnVoltarTela4" style="margin-top: 8px; width: 100%; padding: 12px; font-weight: bold; background: #e0e0e0; border: none; border-radius: 8px; cursor: pointer;">Voltar para o Painel</button>
     </div>
 
     <!-- MODAL DE SUCESSO / PRINT -->
-    <div class="modal-overlay" id="modalPopup">
-        <div class="modal-content">
+    <div class="modal-overlay" id="modalPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
+        <div class="modal-content" style="background:#fff; padding:20px; border-radius:8px; width:80%; max-width:300px; text-align:center;">
             <h3>Sua contribuição foi registrada!</h3>
             <p id="modalMensagemTexto">Não esqueça de tirar um print e levar os itens no dia informado pelo ministério.</p>
-            <button class="btn-primary" onclick="fecharModal()">Ok, Entendido</button>
+            <button class="btn-primary" id="btnFecharModal" style="margin-top:15px; padding:10px 20px; background:#007bff; color:#fff; border:none; border-radius:5px; cursor:pointer;">Ok, Entendido</button>
         </div>
     </div>
 
 </div>
 
-<!-- Script principal como Módulo para suportar o Firebase -->
 <script type="module" src="script.js"></script>
 </body>
 </html>
