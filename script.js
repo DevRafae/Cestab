@@ -25,44 +25,43 @@ try {
 let cestaAtualAtiva = 1;
 let cestaVisualizadaAdmin = 1;
 
+// Modelo base contendo os 22 itens completos que serão replicados para todas as cestas
+const modeloItemBase = [
+    { id: 'biscoito_recheado', nome: 'Biscoito recheado - 200g', atual: 0, meta: 1 },
+    { id: 'arroz', nome: 'Arroz tipo 1 - 5kg', atual: 0, meta: 2 },
+    { id: 'feijao', nome: 'Feijão carioca - 1kg', atual: 0, meta: 3 },
+    { id: 'acucar', nome: 'Açúcar refinado - 1kg', atual: 0, meta: 3 },
+    { id: 'oleo', nome: 'Óleo de soja - 900ml', atual: 0, meta: 2 },
+    { id: 'sal', nome: 'Sal refinado - 1kg', atual: 0, meta: 1 },
+    { id: 'cafe', nome: 'Café - 500g', atual: 0, meta: 1 },
+    { id: 'macarrao', nome: 'Macarrão - 500g', atual: 0, meta: 2 },
+    { id: 'molho_tomate', nome: 'Molho de tomate - 300g', atual: 0, meta: 2 },
+    { id: 'farinha_trigo', nome: 'Farinha de trigo - 1kg', atual: 0, meta: 1 },
+    { id: 'farinha_mandioca', nome: 'Farinha de mandioca - 500g', atual: 0, meta: 1 },
+    { id: 'leite_po', nome: 'Leite em pó - 400g', atual: 0, meta: 2 },
+    { id: 'biscoito_salgado', nome: 'Biscoito salgado - 300g', atual: 0, meta: 1 },
+    { id: 'sardinha', nome: 'Sardinha óleo - 125g', atual: 0, meta: 2 },
+    { id: 'fuba', nome: 'Fubá - 500g', atual: 0, meta: 1 },
+    { id: 'sabao_po', nome: 'Sabão em pó - 1kg', atual: 0, meta: 1 },
+    { id: 'detergente', nome: 'Detergente líquido - 500ml', atual: 0, meta: 1 },
+    { id: 'sabao_barra', nome: 'Sabão barra - 200g', atual: 0, meta: 1 },
+    { id: 'esponja', nome: 'Esponja louça', atual: 0, meta: 1 },
+    { id: 'papel_higienico', nome: 'Papel higiênico - 12 rolos', atual: 0, meta: 1 },
+    { id: 'creme_dental', nome: 'Creme dental - 90g', atual: 0, meta: 3 },
+    { id: 'sabonete', nome: 'Sabonete barra - 90g', atual: 0, meta: 5 }
+];
+
 const modeloDadosCestas = {
     1: {
-        itens: [
-            { id: 'biscoito_recheado', nome: 'Biscoito recheado - 200g', atual: 0, meta: 1 },
-            { id: 'arroz', nome: 'Arroz tipo 1 - 5kg', atual: 0, meta: 2 },
-            { id: 'feijao', nome: 'Feijão carioca - 1kg', atual: 0, meta: 3 },
-            { id: 'acucar', nome: 'Açúcar refinado - 1kg', atual: 0, meta: 3 },
-            { id: 'oleo', nome: 'Óleo de soja - 900ml', atual: 0, meta: 2 },
-            { id: 'sal', nome: 'Sal refinado - 1kg', atual: 0, meta: 1 },
-            { id: 'cafe', nome: 'Café - 500g', atual: 0, meta: 1 },
-            { id: 'macarrao', nome: 'Macarrão - 500g', atual: 0, meta: 2 },
-            { id: 'molho_tomate', nome: 'Molho de tomate - 300g', atual: 0, meta: 2 },
-            { id: 'farinha_trigo', nome: 'Farinha de trigo - 1kg', atual: 0, meta: 1 },
-            { id: 'farinha_mandioca', nome: 'Farinha de mandioca - 500g', atual: 0, meta: 1 },
-            { id: 'leite_po', nome: 'Leite em pó - 400g', atual: 0, meta: 2 },
-            { id: 'biscoito_salgado', nome: 'Biscoito salgado - 300g', atual: 0, meta: 1 },
-            { id: 'sardinha', nome: 'Sardinha óleo - 125g', atual: 0, meta: 2 },
-            { id: 'fuba', nome: 'Fubá - 500g', atual: 0, meta: 1 },
-            { id: 'sabao_po', nome: 'Sabão em pó - 1kg', atual: 0, meta: 1 },
-            { id: 'detergente', nome: 'Detergente líquido - 500ml', atual: 0, meta: 1 },
-            { id: 'sabao_barra', nome: 'Sabão barra - 200g', atual: 0, meta: 1 },
-            { id: 'esponja', nome: 'Esponja louça', atual: 0, meta: 1 },
-            { id: 'papel_higienico', nome: 'Papel higiênico - 12 rolos', atual: 0, meta: 1 },
-            { id: 'creme_dental', nome: 'Creme dental - 90g', atual: 0, meta: 3 },
-            { id: 'sabonete', nome: 'Sabonete barra - 90g', atual: 0, meta: 5 }
-        ],
+        itens: JSON.parse(JSON.stringify(modeloItemBase)),
         contribuicoes: []
     },
     2: {
-        itens: [
-            { id: 'cafe_c2', nome: 'Café - 500g', atual: 0, meta: 1 }
-        ],
+        itens: JSON.parse(JSON.stringify(modeloItemBase)),
         contribuicoes: []
     },
     3: {
-        itens: [
-            { id: 'acucar_c3', nome: 'Açúcar refinado - 1kg', atual: 0, meta: 1 }
-        ],
+        itens: JSON.parse(JSON.stringify(modeloItemBase)),
         contribuicoes: []
     }
 };
