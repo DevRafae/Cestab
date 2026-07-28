@@ -10,83 +10,117 @@
 
 <div class="app-container">
 
-    <!-- TELA 1: Menu Inicial com as Cestas -->
-    <div id="tela-1" class="screen active">
-        <h2>Montagem de Cestas Básicas</h2>
+    <!-- TELA 1: Menu Principal -->
+    <div id="tela1" class="screen active">
+        <h2>Montagem de cestas básicas</h2>
         
-        <!-- O container onde o JS injeta dinamicamente as cestas -->
-        <div id="lista-cestas-container" style="display: flex; flex-direction: column; gap: 12px; flex: 1; overflow-y: auto;"></div>
-
-        <div class="menu-card" onclick="abrirModalAdmin()" style="margin-top: auto;">
+        <div class="menu-card" onclick="abrirCesta(1)">
             <div class="menu-card-left">
-                <svg class="menu-icon-svg" viewBox="0 0 640 640"><path d="M259.1 73.5C262.1 58.7 275.2 48 290.4 48L350.2 48C365.4 48 378.5 58.7 381.5 73.5L396 143.5C410.1 149.5 423.3 157.2 435.3 166.3L503.1 143.8C517.5 139 533.3 145 540.9 158.2L570.8 210C578.4 223.2 575.7 239.8 564.3 249.9L511 297.3C511.9 304.7 512.3 312.3 512.3 320C512.3 327.7 511.8 335.3 511 342.7L564.4 390.2C575.8 400.3 578.4 417 570.9 430.1L541 481.9C533.4 495 517.6 501.1 503.2 496.3L435.4 473.8C423.3 482.9 410.1 490.5 396.1 496.6L381.7 566.5C378.6 581.4 365.5 592 350.4 592L290.6 592C275.4 592 262.3 581.3 259.3 566.5L244.9 496.6C230.8 490.6 217.7 482.9 205.6 473.8L137.5 496.3C123.1 501.1 107.3 495.1 99.7 481.9L69.8 430.1C62.2 416.9 64.9 400.3 76.3 390.2L129.7 342.7C128.8 335.3 128.4 327.7 128.4 320C128.4 312.3 128.9 304.7 129.7 297.3L76.3 249.8C64.9 239.7 62.3 223 69.8 209.9L99.7 158.1C107.3 144.9 123.1 138.9 137.5 143.7L205.3 166.2C217.4 157.1 230.6 149.5 244.6 143.4L259.1 73.5zM320.3 400C364.5 399.8 400.2 363.9 400 319.7C399.8 275.5 363.9 239.8 319.7 240C275.5 240.2 239.8 276.1 240 320.3C240.2 364.5 276.1 400.2 320.3 400z"/></svg>
+                <span class="menu-icon">📦</span>
+                <span>Cesta 1</span>
+            </div>
+        </div>
+
+        <div class="menu-card locked" id="cardCesta2" onclick="abrirCesta(2)">
+            <div class="menu-card-left">
+                <span class="menu-icon">📦</span>
+                <span>Cesta 2</span>
+            </div>
+            <span id="lockCesta2">⏱️</span>
+        </div>
+
+        <div class="menu-card locked" id="cardCesta3" onclick="abrirCesta(3)">
+            <div class="menu-card-left">
+                <span class="menu-icon">📦</span>
+                <span>Cesta 3</span>
+            </div>
+            <span id="lockCesta3">⏱️</span>
+        </div>
+
+        <div class="menu-card info-card">
+            <div class="menu-card-left">
+                <span class="menu-icon">ℹ️</span>
+                <span style="font-size: 13px; color: var(--cinza-chumbo);">Se esqueceu seu item ou precisa de ajuda, entre em contato com o Administrador.</span>
+            </div>
+        </div>
+
+        <div class="menu-card" onclick="tentarAdmin()" style="margin-top: auto;">
+            <div class="menu-card-left">
+                <span class="menu-icon">⚙️</span>
                 <span>Painel Admin (Gerenciar)</span>
             </div>
         </div>
     </div>
 
-    <!-- TELA 2: Itens da Cesta Ativa -->
-    <div id="tela-2" class="screen">
-        <h2 id="titulo-cesta-ativa">Cesta 1</h2>
+    <!-- TELA 2: Contribuição da Cesta -->
+    <div id="tela2" class="screen">
+        <h2 id="tituloCestaAtiva">Cesta 1</h2>
         
-        <div id="itens-cesta-container" style="flex: 1; overflow-y: auto; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;"></div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="barraProgresso"></div>
+        </div>
+        <div class="progress-text">Quantidade para completar a cesta</div>
 
-        <input type="text" id="nome-colaborador" placeholder="Digite o seu nome completo:" style="padding: 10px; margin-bottom: 10px; width: 100%; border: 1px solid #ccc; border-radius: 6px;">
+        <div id="containerItensCesta" style="flex: 1; overflow-y: auto; margin-bottom: 12px;"></div>
+
+        <input type="text" id="nomeColaborador" placeholder="Digite o seu nome:">
         
         <button class="btn-primary" onclick="registrarContribuicao()">Registrar a contribuição</button>
-        
-        <button class="home-icon-btn" onclick="irParaTela(1)" style="margin-top: 10px;">
-            <svg class="btn-icon-svg" viewBox="0 0 640 640"><path d="M304 70.1C313.1 61.9 326.9 61.9 336 70.1L568 278.1C577.9 286.9 578.7 302.1 569.8 312C560.9 321.9 545.8 322.7 535.9 313.8L527.9 306.6L527.9 511.9C527.9 547.2 499.2 575.9 463.9 575.9L175.9 575.9C140.6 575.9 111.9 547.2 111.9 511.9L111.9 306.6L103.9 313.8C94 322.6 78.9 321.8 70 312C61.1 302.2 62 287 71.8 278.1L304 70.1zM320 120.2L160 263.7L160 512C160 520.8 167.2 528 176 528L224 528L224 424C224 384.2 256.2 352 296 352L344 352C383.8 352 416 384.2 416 424L416 528L464 528C472.8 528 480 520.8 480 512L480 263.7L320 120.3zM272 528L368 528L368 424C368 410.7 357.3 400 344 400L296 400C282.7 400 272 410.7 272 424L272 528z"/></svg>
-        </button>
+        <button class="home-icon-btn" onclick="voltarTela(1)">🏠</button>
     </div>
 
-    <!-- TELA 3: Painel Admin - Lista de Cestas -->
-    <div id="tela-3" class="screen">
-        <h2>Painel Admin - Cestas</h2>
+    <!-- TELA 3: Menu Admin -->
+    <div id="tela3" class="screen">
+        <h2>Painel Admin - Lista de Cestas</h2>
         
-        <div id="cards-gerenciamento" style="display: flex; flex-direction: column; gap: 12px; flex: 1; overflow-y: auto;"></div>
-
-        <button class="home-icon-btn" style="margin-top: auto;" onclick="irParaTela(1)">
-            <svg class="btn-icon-svg" viewBox="0 0 640 640"><path d="M304 70.1C313.1 61.9 326.9 61.9 336 70.1L568 278.1C577.9 286.9 578.7 302.1 569.8 312C560.9 321.9 545.8 322.7 535.9 313.8L527.9 306.6L527.9 511.9C527.9 547.2 499.2 575.9 463.9 575.9L175.9 575.9C140.6 575.9 111.9 547.2 111.9 511.9L111.9 306.6L103.9 313.8C94 322.6 78.9 321.8 70 312C61.1 302.2 62 287 71.8 278.1L304 70.1zM320 120.2L160 263.7L160 512C160 520.8 167.2 528 176 528L224 528L224 424C224 384.2 256.2 352 296 352L344 352C383.8 352 416 384.2 416 424L416 528L464 528C472.8 528 480 520.8 480 512L480 263.7L320 120.3zM272 528L368 528L368 424C368 410.7 357.3 400 344 400L296 400C282.7 400 272 410.7 272 424L272 528z"/></svg>
-        </button>
-    </div>
-
-    <!-- TELA 4: Detalhes de Gerenciamento da Cesta -->
-    <div id="tela-4" class="screen">
-        <h2 id="titulo-tela-4">Gerenciamento da Cesta</h2>
-        
-        <div id="detalhe-itens-container" style="flex: 1; overflow-y: auto; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;"></div>
-
-        <button class="btn-danger" onclick="resetarCestaAtual()">Zerar itens desta cesta</button>
-        
-        <button class="home-icon-btn" onclick="irParaTela(3)" style="margin-top: 10px;">
-            <svg class="btn-icon-svg" viewBox="0 0 640 640"><path d="M304 70.1C313.1 61.9 326.9 61.9 336 70.1L568 278.1C577.9 286.9 578.7 302.1 569.8 312C560.9 321.9 545.8 322.7 535.9 313.8L527.9 306.6L527.9 511.9C527.9 547.2 499.2 575.9 463.9 575.9L175.9 575.9C140.6 575.9 111.9 547.2 111.9 511.9L111.9 306.6L103.9 313.8C94 322.6 78.9 321.8 70 312C61.1 302.2 62 287 71.8 278.1L304 70.1zM320 120.2L160 263.7L160 512C160 520.8 167.2 528 176 528L224 528L224 424C224 384.2 256.2 352 296 352L344 352C383.8 352 416 384.2 416 424L416 528L464 528C472.8 528 480 520.8 480 512L480 263.7L320 120.3zM272 528L368 528L368 424C368 410.7 357.3 400 344 400L296 400C282.7 400 272 410.7 272 424L272 528z"/></svg>
-        </button>
-    </div>
-
-    <!-- MODAL DE SUCESSO -->
-    <div class="modal-overlay" id="modal-sucesso" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
-        <div class="modal-content" style="background:#fff; padding:20px; border-radius:8px; text-align:center; max-width:300px;">
-            <h3>Sucesso!</h3>
-            <p id="texto-sucesso">Sua contribuição foi registrada.</p>
-            <button class="btn-primary" onclick="fecharModalSucesso()">Ok, Entendido</button>
+        <div class="menu-card" onclick="verDetalhesCestaAdmin(1)">
+            <div class="menu-card-left">
+                <span class="menu-icon">📋</span>
+                <span>Gerenciar Cesta 1</span>
+            </div>
         </div>
+
+        <div class="menu-card" onclick="verDetalhesCestaAdmin(2)">
+            <div class="menu-card-left">
+                <span class="menu-icon">📋</span>
+                <span>Gerenciar Cesta 2</span>
+            </div>
+            <span id="lockLista2">⏱️</span>
+        </div>
+
+        <div class="menu-card" onclick="verDetalhesCestaAdmin(3)">
+            <div class="menu-card-left">
+                <span class="menu-icon">📋</span>
+                <span>Gerenciar Cesta 3</span>
+            </div>
+            <span id="lockLista3">⏱️</span>
+        </div>
+
+        <button class="home-icon-btn" style="margin-top: auto;" onclick="voltarTela(1)">🏠</button>
     </div>
 
-    <!-- MODAL DE ADMIN (Senha) -->
-    <div class="modal-overlay" id="modal-admin" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
-        <div class="modal-content" style="background:#fff; padding:20px; border-radius:8px; text-align:center; max-width:300px;">
-            <h3>Painel Administrativo</h3>
-            <p>Digite a senha de acesso:</p>
-            <input type="password" id="senha-admin" placeholder="Senha" style="padding:8px; width:100%; margin-bottom:10px; border:1px solid #ccc; border-radius:4px;">
-            <button class="btn-primary" onclick="validarAdmin()">Entrar</button>
-            <button class="btn-danger" onclick="fecharModalAdmin()" style="margin-top:5px;">Cancelar</button>
+    <!-- TELA 4: Detalhes Admin / Lista de Contribuições -->
+    <div id="tela4" class="screen">
+        <h2 id="tituloTela4">Gerenciamento - Cesta 1</h2>
+        
+        <div id="containerContribuicoesLista" style="flex: 1; overflow-y: auto; margin-bottom: 12px;"></div>
+
+        <button class="btn-danger" onclick="resetarCestaAtual()">Resetar itens da cesta</button>
+        <button class="home-icon-btn" onclick="voltarTela(3)">🏠</button>
+    </div>
+
+    <!-- MODAL DE SUCESSO / PRINT -->
+    <div class="modal-overlay" id="modalPopup">
+        <div class="modal-content">
+            <h3>Sua contribuição foi registrada!</h3>
+            <p id="modalMensagemTexto">Não esqueça de tirar um print e levar os itens no dia informado pelo ministério.</p>
+            <button class="btn-primary" onclick="fecharModal()">Ok, Entendido</button>
         </div>
     </div>
 
 </div>
 
-<!-- ATENÇÃO AO TYPE="MODULE" AQUI EMBAIXO -->
+<!-- Script principal como Módulo para suportar o Firebase -->
 <script type="module" src="script.js"></script>
 </body>
 </html>
