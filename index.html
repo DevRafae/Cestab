@@ -66,7 +66,7 @@
         <input type="text" id="nomeColaborador" placeholder="Digite o seu nome:">
         
         <button class="btn-primary" id="btnRegistrar">Registrar a contribuição</button>
-        <button class="btn-secondary" id="btnVoltarTela2" style="margin-top: 8px; width: 100%; padding: 12px; font-weight: bold; background: #e0e0e0; border: none; border-radius: 8px; cursor: pointer;">Página Inicial</button>
+        <button class="home-icon-btn" id="btnVoltarTela2">Página Inicial</button>
     </div>
 
     <!-- TELA 3: Menu Admin -->
@@ -96,7 +96,7 @@
             <span id="lockLista3">⏱️</span>
         </div>
 
-        <button class="btn-secondary" id="btnVoltarTela3" style="margin-top: auto; width: 100%; padding: 12px; font-weight: bold; background: #e0e0e0; border: none; border-ries: 8px; cursor: pointer;">Página Inicial</button>
+        <button class="home-icon-btn" id="btnVoltarTela3" style="margin-top: auto;">Página Inicial</button>
     </div>
 
     <!-- TELA 4: Detalhes Admin / Lista de Contribuições -->
@@ -106,15 +106,24 @@
         <div id="containerContribuicoesLista" style="flex: 1; overflow-y: auto; margin-bottom: 12px;"></div>
 
         <button class="btn-danger" id="btnResetar">Resetar itens da cesta</button>
-        <button class="btn-secondary" id="btnVoltarTela4" style="margin-top: 8px; width: 100%; padding: 12px; font-weight: bold; background: #e0e0e0; border: none; border-radius: 8px; cursor: pointer;">Voltar para o Painel</button>
+        <button class="home-icon-btn" id="btnVoltarTela4" style="margin-top: 8px;">Voltar para o Painel</button>
     </div>
 
-    <!-- MODAL DE SUCESSO / PRINT -->
-    <div class="modal-overlay" id="modalPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
-        <div class="modal-content" style="background:#fff; padding:20px; border-radius:8px; width:80%; max-width:300px; text-align:center;">
+ 
+    <div class="modal-overlay" id="modalPopup">
+        <div class="modal-content">
             <h3>Sua contribuição foi registrada!</h3>
             <p id="modalMensagemTexto">Não esqueça de tirar um print e levar os itens no dia informado pelo ministério.</p>
-            <button class="btn-primary" id="btnFecharModal" style="margin-top:15px; padding:10px 20px; background:#007bff; color:#fff; border:none; border-radius:5px; cursor:pointer;">Ok, Entendido</button>
+            <button class="btn-primary" id="btnFecharModal" style="margin-top:15px;">Entendido</button>
+        </div>
+    </div>
+
+
+    <div class="modal-overlay" id="customAlertModal">
+        <div class="modal-content">
+            <h3 id="customAlertTitle">Atenção</h3>
+            <p id="customAlertMessage"></p>
+            <button class="btn-primary" id="customAlertBtn">Entendido</button>
         </div>
     </div>
 
