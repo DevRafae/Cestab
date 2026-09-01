@@ -63,7 +63,7 @@
 
         <div id="containerItensCesta" style="flex: 1; overflow-y: auto; margin-bottom: 12px;"></div>
 
-        <input type="text" id="nomeColaborador" placeholder="Digite o seu nome:">
+        <input type="text" id="nomeColaborador" placeholder="Digite o seu nome:" style="padding:12px; border-radius:8px; border:1px solid var(--cinza-borda); margin-bottom:10px; width:100%; font-size:15px;">
         
         <button class="btn-primary" id="btnRegistrar">Registrar a contribuição</button>
         <button class="home-icon-btn" id="btnVoltarTela2">Página Inicial</button>
@@ -109,26 +109,26 @@
         <button class="home-icon-btn" id="btnVoltarTela4" style="margin-top: 8px;">Voltar para o Painel</button>
     </div>
 
- 
+    <!-- MODAL DE SUCESSO / PRINT -->
     <div class="modal-overlay" id="modalPopup">
         <div class="modal-content">
             <h3>Sua contribuição foi registrada!</h3>
-            <p id="modalMensagemTexto">Não esqueça de tirar um print e levar os itens no dia informado pelo ministério.</p>
-            <button class="btn-primary" id="btnFecharModal" style="margin-top:15px;">Entendido</button>
+            <p id="modalMensagemTexto">Não esqueça de tirar um print desta tela!</p>
+            <button class="btn-primary" id="btnFecharModal">Entendido</button>
         </div>
     </div>
 
-
-    <div class="modal-overlay" id="customAlertModal">
-        <div class="modal-content">
+    <!-- MODAL DE AVISOS / CONFIRMAÇÃO (Usando as classes do seu CSS) -->
+    <div class="custom-modal-overlay" id="customAlertModal">
+        <div class="custom-modal-box">
             <h3 id="customAlertTitle">Atenção</h3>
-            <p id="customAlertMessage"></p>
-            <button class="btn-primary" id="customAlertBtn">Entendido</button>
+            <p id="customAlertMessage">Mensagem de aviso</p>
+            <button id="customAlertBtn">Entendido</button>
         </div>
     </div>
 
 </div>
 
-<script type="module" src="script.js"></script>
+<script type="module" src="main.js"></script>
 </body>
 </html>
