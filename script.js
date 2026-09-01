@@ -1,23 +1,23 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
 
-// Suas credenciais oficiais do Firebase
+// Credenciais do novo projeto (cestab-v2)
 const firebaseConfig = {
-    apiKey: "AIzaSyBEZG1_x1_DvaoE8DMm5Ni1r2ntl0cwnC0",
-    authDomain: "cesta-b.firebaseapp.com",
-    projectId: "cesta-b",
-    storageBucket: "cesta-b.firebasestorage.app",
-    messagingSenderId: "387760959485",
-    appId: "1:387760959485:web:3a4c4fdef7964876edf394",
-    measurementId: "G-1BRL7NELCE"
+    apiKey: "AIzaSyB-yToU7gjYCe6QfUO1Q3nhJmgA38m8OWg",
+    authDomain: "cestab-v2.firebaseapp.com",
+    projectId: "cestab-v2",
+    storageBucket: "cestab-v2.firebasestorage.app",
+    messagingSenderId: "1034783884972",
+    appId: "1:1034783884972:web:ec96c6bf56d7704c4d4109",
+    measurementId: "G-QNZF7R24CK"
 };
 
 let db = null;
 try {
     const app = initializeApp(firebaseConfig);
-    db = getFirestore(app); // Inicializa o banco de dados
-    getAnalytics(app);      // Inicializa o analytics
+    db = getFirestore(app); 
+    getAnalytics(app);      
 } catch (e) {
     console.warn("Erro ao iniciar o Firebase:", e);
 }
@@ -25,7 +25,6 @@ try {
 let cestaAtualAtiva = 1;
 let cestaVisualizadaAdmin = 1;
 
-// Modelo base contendo os 22 itens completos que serão replicados para todas as cestas
 const modeloItemBase = [
     { id: 'biscoito_recheado', nome: 'Biscoito recheado - 200g', atual: 0, meta: 1 },
     { id: 'arroz', nome: 'Arroz tipo 1 - 5kg', atual: 0, meta: 2 },
@@ -52,18 +51,9 @@ const modeloItemBase = [
 ];
 
 const modeloDadosCestas = {
-    1: {
-        itens: JSON.parse(JSON.stringify(modeloItemBase)),
-        contribuicoes: []
-    },
-    2: {
-        itens: JSON.parse(JSON.stringify(modeloItemBase)),
-        contribuicoes: []
-    },
-    3: {
-        itens: JSON.parse(JSON.stringify(modeloItemBase)),
-        contribuicoes: []
-    }
+    1: { itens: JSON.parse(JSON.stringify(modeloItemBase)), contribuicoes: [] },
+    2: { itens: JSON.parse(JSON.stringify(modeloItemBase)), contribuicoes: [] },
+    3: { itens: JSON.parse(JSON.stringify(modeloItemBase)), contribuicoes: [] }
 };
 
 let dadosCestas = JSON.parse(JSON.stringify(modeloDadosCestas));
@@ -141,11 +131,11 @@ function atualizarStatusGeral() {
 
 function abrirCesta(num) {
     if(num === 2 && !verificarCestaCompleta(1)) {
-        alert('A Cesta 1 ainda não está completa!');
+        mostrarAviso("Cesta Bloqueada", "A Cesta 1 ainda não está completa!");
         return;
     }
     if(num === 3 && (!verificarCestaCompleta(1) || !verificarCestaCompleta(2))) {
-        alert('A Cesta 2 ainda não está completa!');
+        mostrarAviso("Cesta Bloqueada", "A Cesta anterior ainda não está completa!");
         return;
     }
     cestaAtualAtiva = num;
@@ -170,18 +160,31 @@ function renderizarItensCestaAtiva() {
 
     dados.itens.forEach(item => {
         let completo = item.atual >= item.meta;
+        let restante = item.meta - item.atual;
+        
+        let optionsHtml = '';
+        for (let i = 0; i <= restante; i++) {
+            optionsHtml += `<option value="${i}">${i}</option>`;
+        }
+
         let div = document.createElement('div');
         div.className = 'item-row';
         div.style.marginBottom = '10px';
         div.innerHTML = `
             <div class="item-row-top" style="display:flex; justify-content:space-between; align-items:center;">
                 <div class="item-info" style="display:flex; align-items:center; gap:8px;">
-                    <input type="checkbox" class="check-item" value="${item.id}" ${completo ? 'disabled' : ''}>
                     <span>${item.nome}</span>
                 </div>
-                <span>${item.atual}/${item.meta}</span>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="font-size: 14px; color: var(--cinza-chumbo);">${item.atual}/${item.meta}</span>
+                    ${completo ? '<span style="font-size:12px; color:var(--verde-principal); font-weight:bold;">Concluído</span>' : `
+                        <select class="qtd-item" data-id="${item.id}" style="padding:6px 10px; border-radius:6px; border:1px solid var(--cinza-borda); background-color: #fff; font-size: 14px; color: var(--texto-cor); cursor: pointer;">
+                            ${optionsHtml}
+                        </select>
+                    `}
+                </div>
             </div>
-            ${completo ? '<div class="item-status-msg" style="font-size:12px; color:green;">Item já completado!</div>' : ''}
+            ${completo ? '<div class="item-status-msg" style="font-size:12px; color:green; margin-top:4px;">Item já completado!</div>' : ''}
         `;
         container.appendChild(div);
     });
@@ -191,35 +194,42 @@ async function registrarContribuicao() {
     let inputNome = document.getElementById('nomeColaborador');
     let nome = inputNome ? inputNome.value.trim() : '';
     if(!nome) {
-        alert('Por favor, digite o seu nome.');
+        mostrarAviso("Identificação", "Por favor, digite o seu nome.");
         return;
     }
 
-    let checks = document.querySelectorAll('.check-item:checked');
-    if(checks.length === 0) {
-        alert('Selecione pelo menos um item para contribuir.');
-        return;
-    }
-
-    let itensFlegadosNomes = [];
+    let selects = document.querySelectorAll('.qtd-item');
+    let itensSelecionados = [];
     let dados = dadosCestas[cestaAtualAtiva];
+    let totalAdicionadoNestaAcao = 0;
 
-    checks.forEach(chk => {
-        let itemId = chk.value;
-        let itemObj = dados.itens.find(i => i.id === itemId);
-        if(itemObj && itemObj.atual < itemObj.meta) {
-            itemObj.atual += 1;
-            let contadorStr = `${itemObj.atual}/${itemObj.meta}`;
-            let registroNomeItem = `${itemObj.nome.split('-')[0].trim()} - ${contadorStr}`;
+    selects.forEach(sel => {
+        let qtdDesejada = parseInt(sel.value) || 0;
+        if(qtdDesejada > 0) {
+            let itemId = sel.getAttribute('data-id');
+            let itemObj = dados.itens.find(i => i.id === itemId);
             
-            dados.contribuicoes.push({
-                idUnico: Date.now() + Math.random(),
-                nome: nome,
-                item: registroNomeItem
-            });
-            itensFlegadosNomes.push(registroNomeItem);
+            if(itemObj) {
+                totalAdicionadoNestaAcao += qtdDesejada;
+                itemObj.atual += qtdDesejada;
+
+                let contadorStr = `${itemObj.atual}/${itemObj.meta}`;
+                let registroNomeItem = `${itemObj.nome.split('-')[0].trim()} (${qtdDesejada}x) - ${contadorStr}`;
+                
+                dados.contribuicoes.push({
+                    idUnico: Date.now() + Math.random(),
+                    nome: nome,
+                    item: registroNomeItem
+                });
+                itensSelecionados.push(registroNomeItem);
+            }
         }
     });
+
+    if(totalAdicionadoNestaAcao === 0) {
+        mostrarAviso("Itens Vazios", "Selecione a quantidade de pelo menos um item para contribuir.");
+        return;
+    }
 
     await salvarDadosNoBanco();
 
@@ -227,7 +237,7 @@ async function registrarContribuicao() {
     renderizarItensCestaAtiva();
     atualizarStatusGeral();
 
-    let mensagemPopup = `Não esqueça de tirar um print desta tela!<br><br>Itens escolhidos:<br><b>${itensFlegadosNomes.join('<br>')}</b><br><br>Leve os itens no dia informado pelo ministério. Deus abençoe!`;
+    let mensagemPopup = `Não esqueça de tirar um print desta tela!<br><br>Itens escolhidos:<br><b>${itensSelecionados.join('<br>')}</b><br><br>Leve os itens no dia informado pelo ministério. Deus abençoe!`;
     let msgTexto = document.getElementById('modalMensagemTexto');
     if(msgTexto) msgTexto.innerHTML = mensagemPopup;
     
@@ -237,11 +247,11 @@ async function registrarContribuicao() {
 
 function verDetalhesCestaAdmin(num) {
     if(num === 2 && !verificarCestaCompleta(1)) {
-        alert('Cesta bloqueada.');
+        mostrarAviso("Cesta Bloqueada", "A Cesta anterior ainda não está completa!");
         return;
     }
     if(num === 3 && (!verificarCestaCompleta(1) || !verificarCestaCompleta(2))) {
-        alert('Cesta bloqueada.');
+        mostrarAviso("Cesta Bloqueada", "A Cesta anterior ainda não está completa!");
         return;
     }
     cestaVisualizadaAdmin = num;
@@ -282,11 +292,17 @@ function renderizarListaContribuicoesAdmin() {
             let index = dados.contribuicoes.findIndex(item => item.idUnico === idUnico);
             if(index !== -1) {
                 let itemRemovido = dados.contribuicoes[index];
-                let nomeItemBase = itemRemovido.item.split('-')[0].trim();
+                
+                let matchQtd = itemRemovido.item.match(/\((\d+)x\)/);
+                let qtdRemover = matchQtd ? parseInt(matchQtd[1]) : 1;
+
+                let nomeItemBase = itemRemovido.item.split('(')[0].trim();
                 let itemObj = dados.itens.find(i => i.nome.includes(nomeItemBase));
-                if(itemObj && itemObj.atual > 0) {
-                    itemObj.atual -= 1;
+                
+                if(itemObj) {
+                    itemObj.atual = Math.max(0, itemObj.atual - qtdRemover);
                 }
+                
                 dados.contribuicoes.splice(index, 1);
                 await salvarDadosNoBanco();
                 renderizarListaContribuicoesAdmin();
@@ -310,7 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
             cestaVisualizadaAdmin = 1;
             mudarTela('tela3');
         } else if(senha !== null) {
-            alert('Senha incorreta!');
+            mostrarAviso("Acesso Negado", "Senha incorreta!");
         }
     });
 
@@ -341,4 +357,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if(modal) modal.style.display = 'none';
         mudarTela('tela1');
     });
+});
+
+function mostrarAviso(titulo, mensagem) {
+    document.getElementById('customAlertTitle').innerText = titulo;
+    document.getElementById('customAlertMessage').innerText = mensagem;
+    document.getElementById('customAlertModal').style.display = 'flex';
+}
+
+document.getElementById('customAlertBtn')?.addEventListener('click', () => {
+    document.getElementById('customAlertModal').style.display = 'none';
 });
