@@ -1,22 +1,22 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 
-// Credenciais do novo projeto (cestab-v2)
+// Suas credenciais oficiais do Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyB-yToU7gjYCe6QfUO1Q3nhJmgA38m8OWg",
-    authDomain: "cestab-v2.firebaseapp.com",
-    projectId: "cestab-v2",
-    storageBucket: "cestab-v2.firebasestorage.app",
-    messagingSenderId: "1034783884972",
-    appId: "1:1034783884972:web:ec96c6bf56d7704c4d4109",
-    measurementId: "G-QNZF7R24CK"
+    apiKey: "AIzaSyBEZG1_x1_DvaoE8DMm5Ni1r2ntl0cwnC0",
+    authDomain: "cesta-b.firebaseapp.com",
+    projectId: "cesta-b",
+    storageBucket: "cesta-b.firebasestorage.app",
+    messagingSenderId: "387760959485",
+    appId: "1:387760959485:web:3a4c4fdef7964876edf394",
+    measurementId: "G-1BRL7NELCE"
 };
 
 let db = null;
 try {
     const app = initializeApp(firebaseConfig);
-    db = getFirestore(app); 
+    db = getFirestore(app);
     getAnalytics(app);      
 } catch (e) {
     console.warn("Erro ao iniciar o Firebase:", e);
@@ -135,7 +135,7 @@ function abrirCesta(num) {
         return;
     }
     if(num === 3 && (!verificarCestaCompleta(1) || !verificarCestaCompleta(2))) {
-        mostrarAviso("Cesta Bloqueada", "A Cesta anterior ainda não está completa!");
+        mostrarAviso("Cesta Bloqueada", "A Cesta 2 ainda não está completa!");
         return;
     }
     cestaAtualAtiva = num;
@@ -177,14 +177,14 @@ function renderizarItensCestaAtiva() {
                 </div>
                 <div style="display:flex; align-items:center; gap:12px;">
                     <span style="font-size: 14px; color: var(--cinza-chumbo);">${item.atual}/${item.meta}</span>
-                    ${completo ? '<span style="font-size:12px; color:var(--verde-principal); font-weight:bold;">Concluído</span>' : `
-                        <select class="qtd-item" data-id="${item.id}" style="padding:6px 10px; border-radius:6px; border:1px solid var(--cinza-borda); background-color: #fff; font-size: 14px; color: var(--texto-cor); cursor: pointer;">
+                    ${completo ? '<span style="font-size:12px; color:green; font-weight:bold;">Concluído</span>' : `
+                        <select class="qtd-item" data-id="${item.id}" style="padding:4px 8px; border-radius:4px; border:1px solid #ccc;">
                             ${optionsHtml}
                         </select>
                     `}
                 </div>
             </div>
-            ${completo ? '<div class="item-status-msg" style="font-size:12px; color:green; margin-top:4px;">Item já completado!</div>' : ''}
+            ${completo ? '<div class="item-status-msg" style="font-size:12px; color:green;">Item já completado!</div>' : ''}
         `;
         container.appendChild(div);
     });
@@ -194,12 +194,12 @@ async function registrarContribuicao() {
     let inputNome = document.getElementById('nomeColaborador');
     let nome = inputNome ? inputNome.value.trim() : '';
     if(!nome) {
-        mostrarAviso("Identificação", "Por favor, digite o seu nome.");
+        mostrarAviso("Atenção", "Por favor, digite o seu nome.");
         return;
     }
 
     let selects = document.querySelectorAll('.qtd-item');
-    let itensSelecionados = [];
+    let itensFlegadosNomes = [];
     let dados = dadosCestas[cestaAtualAtiva];
     let totalAdicionadoNestaAcao = 0;
 
@@ -221,13 +221,13 @@ async function registrarContribuicao() {
                     nome: nome,
                     item: registroNomeItem
                 });
-                itensSelecionados.push(registroNomeItem);
+                itensFlegadosNomes.push(registroNomeItem);
             }
         }
     });
 
     if(totalAdicionadoNestaAcao === 0) {
-        mostrarAviso("Itens Vazios", "Selecione a quantidade de pelo menos um item para contribuir.");
+        mostrarAviso("Atenção", "Selecione a quantidade de pelo menos um item para contribuir.");
         return;
     }
 
@@ -237,7 +237,7 @@ async function registrarContribuicao() {
     renderizarItensCestaAtiva();
     atualizarStatusGeral();
 
-    let mensagemPopup = `Não esqueça de tirar um print desta tela!<br><br>Itens escolhidos:<br><b>${itensSelecionados.join('<br>')}</b><br><br>Leve os itens no dia informado pelo ministério. Deus abençoe!`;
+    let mensagemPopup = `Não esqueça de tirar um print desta tela!<br><br>Itens escolhidos:<br><b>${itensFlegadosNomes.join('<br>')}</b><br><br>Leve os itens no dia informado pelo ministério. Deus abençoe!`;
     let msgTexto = document.getElementById('modalMensagemTexto');
     if(msgTexto) msgTexto.innerHTML = mensagemPopup;
     
@@ -247,11 +247,11 @@ async function registrarContribuicao() {
 
 function verDetalhesCestaAdmin(num) {
     if(num === 2 && !verificarCestaCompleta(1)) {
-        mostrarAviso("Cesta Bloqueada", "A Cesta anterior ainda não está completa!");
+        mostrarAviso("Cesta Bloqueada", "A Cesta 1 ainda não está completa.");
         return;
     }
     if(num === 3 && (!verificarCestaCompleta(1) || !verificarCestaCompleta(2))) {
-        mostrarAviso("Cesta Bloqueada", "A Cesta anterior ainda não está completa!");
+        mostrarAviso("Cesta Bloqueada", "A Cesta anterior ainda não está completa.");
         return;
     }
     cestaVisualizadaAdmin = num;
@@ -284,30 +284,36 @@ function renderizarListaContribuicoesAdmin() {
     });
 
     container.querySelectorAll('.btn-remover').forEach(btn => {
-        btn.addEventListener('click', async function() {
+        btn.addEventListener('click', function() {
             let idUnico = Number(this.getAttribute('data-id'));
-            if(!confirm('Deseja remover este item da lista?')) return;
             
-            let dados = dadosCestas[cestaVisualizadaAdmin];
-            let index = dados.contribuicoes.findIndex(item => item.idUnico === idUnico);
-            if(index !== -1) {
-                let itemRemovido = dados.contribuicoes[index];
-                
-                let matchQtd = itemRemovido.item.match(/\((\d+)x\)/);
-                let qtdRemover = matchQtd ? parseInt(matchQtd[1]) : 1;
+            mostrarConfirmacaoCustomizada(
+                "Remover Item",
+                "Deseja realmente remover este item da lista?",
+                async () => {
+                    let dados = dadosCestas[cestaVisualizadaAdmin];
+                    let index = dados.contribuicoes.findIndex(item => item.idUnico === idUnico);
+                    if(index !== -1) {
+                        let itemRemovido = dados.contribuicoes[index];
+                        
+                        let matchQtd = itemRemovido.item.match(/\((\d+)x\)/);
+                        let qtdRemover = matchQtd ? parseInt(matchQtd[1]) : 1;
 
-                let nomeItemBase = itemRemovido.item.split('(')[0].trim();
-                let itemObj = dados.itens.find(i => i.nome.includes(nomeItemBase));
-                
-                if(itemObj) {
-                    itemObj.atual = Math.max(0, itemObj.atual - qtdRemover);
+                        let nomeItemBase = itemRemovido.item.split('(')[0].trim();
+                        let itemObj = dados.itens.find(i => i.nome.includes(nomeItemBase));
+                        
+                        if(itemObj) {
+                            itemObj.atual = Math.max(0, itemObj.atual - qtdRemover);
+                        }
+                        
+                        dados.contribuicoes.splice(index, 1);
+                        await salvarDadosNoBanco();
+                        renderizarListaContribuicoesAdmin();
+                        atualizarStatusGeral();
+                        mostrarAviso("Sucesso", "Item removido com sucesso!");
+                    }
                 }
-                
-                dados.contribuicoes.splice(index, 1);
-                await salvarDadosNoBanco();
-                renderizarListaContribuicoesAdmin();
-                atualizarStatusGeral();
-            }
+            );
         });
     });
 }
@@ -340,16 +346,20 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('btnAdminCesta2')?.addEventListener('click', () => verDetalhesCestaAdmin(2));
     document.getElementById('btnAdminCesta3')?.addEventListener('click', () => verDetalhesCestaAdmin(3));
 
-    document.getElementById('btnResetar')?.addEventListener('click', async () => {
-        if(confirm('Tem certeza absoluta que deseja resetar todos os itens e contribuições desta cesta?')) {
-            let dados = dadosCestas[cestaVisualizadaAdmin];
-            dados.contribuicoes = [];
-            dados.itens.forEach(i => i.atual = 0);
-            await salvarDadosNoBanco();
-            renderizarListaContribuicoesAdmin();
-            atualizarStatusGeral();
-            alert('Cesta resetada com sucesso!');
-        }
+    document.getElementById('btnResetar')?.addEventListener('click', () => {
+        mostrarConfirmacaoCustomizada(
+            "Resetar Cesta",
+            "Tem certeza absoluta que deseja resetar todos os itens e contribuições desta cesta?",
+            async () => {
+                let dados = dadosCestas[cestaVisualizadaAdmin];
+                dados.contribuicoes = [];
+                dados.itens.forEach(i => i.atual = 0);
+                await salvarDadosNoBanco();
+                renderizarListaContribuicoesAdmin();
+                atualizarStatusGeral();
+                mostrarAviso("Sucesso", "Cesta resetada com sucesso!");
+            }
+        );
     });
 
     document.getElementById('btnFecharModal')?.addEventListener('click', () => {
@@ -360,11 +370,46 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function mostrarAviso(titulo, mensagem) {
-    document.getElementById('customAlertTitle').innerText = titulo;
-    document.getElementById('customAlertMessage').innerText = mensagem;
-    document.getElementById('customAlertModal').style.display = 'flex';
+    let t = document.getElementById('customAlertTitle');
+    let m = document.getElementById('customAlertMessage');
+    let modal = document.getElementById('customAlertModal');
+    if(t) t.innerText = titulo;
+    if(m) m.innerText = mensagem;
+    
+    let btnOk = document.getElementById('customAlertBtn');
+    if(btnOk) {
+        // Restaura o botão para o comportamento padrão de fechar o aviso simples
+        let novoBtnOk = btnOk.cloneNode(true);
+        btnOk.parentNode.replaceChild(novoBtnOk, btnOk);
+        novoBtnOk.innerText = "OK";
+        novoBtnOk.onclick = () => {
+            if(modal) modal.style.display = 'none';
+        };
+    }
+
+    if(modal) modal.style.display = 'flex';
 }
 
-document.getElementById('customAlertBtn')?.addEventListener('click', () => {
-    document.getElementById('customAlertModal').style.display = 'none';
-});
+function mostrarConfirmacaoCustomizada(titulo, mensagem, callbackSim) {
+    let modal = document.getElementById('customAlertModal');
+    if (!modal) return;
+
+    let t = document.getElementById('customAlertTitle');
+    let m = document.getElementById('customAlertMessage');
+    if(t) t.innerText = titulo;
+    if(m) m.innerText = mensagem;
+    modal.style.display = 'flex';
+
+    let btnOk = document.getElementById('customAlertBtn');
+    if(!btnOk) return;
+
+    let novoBtnOk = btnOk.cloneNode(true);
+    btnOk.parentNode.replaceChild(novoBtnOk, btnOk);
+
+    novoBtnOk.innerText = "Sim";
+    
+    novoBtnOk.onclick = async () => {
+        modal.style.display = 'none';
+        await callbackSim();
+    };
+}
