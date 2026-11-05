@@ -8,36 +8,18 @@
 </head>
 <body>
 
-<div class="app-container">
+<div class="container">
 
-    <!-- TELA 1: Menu Principal -->
+    <!-- TELA 1: Menu Principal / Bandeja de Cestas -->
     <div id="tela1" class="screen active">
         <h2>Montagem de cestas básicas</h2>
         
-        <div class="menu-card" id="btnCesta1">
-            <div class="menu-card-left">
-                <span class="menu-icon">📦</span>
-                <span>Cesta 1</span>
-            </div>
+        <!-- Bandeja Dinâmica -->
+        <div id="bandejaCestas" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Gerado via JS -->
         </div>
 
-        <div class="menu-card locked" id="cardCesta2">
-            <div class="menu-card-left">
-                <span class="menu-icon">📦</span>
-                <span>Cesta 2</span>
-            </div>
-            <span id="lockCesta2">⏱️</span>
-        </div>
-
-        <div class="menu-card locked" id="cardCesta3">
-            <div class="menu-card-left">
-                <span class="menu-icon">📦</span>
-                <span>Cesta 3</span>
-            </div>
-            <span id="lockCesta3">⏱️</span>
-        </div>
-
-        <div class="menu-card info-card">
+        <div class="menu-card info-card" style="margin-top: 10px;">
             <div class="menu-card-left">
                 <span class="menu-icon">ℹ️</span>
                 <span style="font-size: 13px; color: var(--cinza-chumbo);">Se esqueceu seu item ou precisa de ajuda, entre em contato com o Administrador.</span>
@@ -52,83 +34,145 @@
         </div>
     </div>
 
-    <!-- TELA 2: Contribuição da Cesta -->
+    <!-- TELA 2: Tela de Doação / Itens da Cesta Ativa -->
     <div id="tela2" class="screen">
-        <h2 id="tituloCestaAtiva">Cesta 1</h2>
-        
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h2 id="tituloCestaAtiva">Cesta 1</h2>
+            <button class="btn btn-secondary" id="btnVoltarTela2" style="padding: 6px 12px; font-size: 0.85rem;">← Voltar</button>
+        </div>
+
         <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="barraProgresso"></div>
+            <div class="progress-bar" id="barraProgresso"></div>
         </div>
-        <div class="progress-text">Quantidade para completar a cesta</div>
 
-        <div id="containerItensCesta" style="flex: 1; overflow-y: auto; margin-bottom: 12px;"></div>
+        <div style="background: #fff; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 6px;">Seu Nome e Sobrenome:</label>
+            <input type="text" id="nomeColaborador" placeholder="Digite seu nome completo" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 12px;">
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Selecione as quantidades que deseja doar:</p>
+            
+            <div id="containerItensCesta">
+                <!-- Itens gerados via JS -->
+            </div>
 
-        <input type="text" id="nomeColaborador" placeholder="Digite o seu nome:" style="padding:12px; border-radius:8px; border:1px solid var(--cinza-borda); margin-bottom:10px; width:100%; font-size:15px;">
-        
-        <button class="btn-primary" id="btnRegistrar">Registrar a contribuição</button>
-        <button class="home-icon-btn" id="btnVoltarTela2">Página Inicial</button>
+            <button class="btn" id="btnRegistrar" style="width: 100%; margin-top: 12px;">Registrar Contribuição</button>
+        </div>
     </div>
 
-    <!-- TELA 3: Menu Admin -->
+    <!-- TELA 3: Painel Admin - Menu Principal do Admin -->
     <div id="tela3" class="screen">
-        <h2>Painel Admin - Lista de Cestas</h2>
-        
-        <div class="menu-card" id="btnAdminCesta1">
-            <div class="menu-card-left">
-                <span class="menu-icon">📋</span>
-                <span>Gerenciar Cesta 1</span>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h2>Painel Admin</h2>
+            <button class="btn btn-secondary" id="btnVoltarTela3" style="padding: 6px 12px; font-size: 0.85rem;">← Voltar</button>
+        </div>
+
+        <div style="background: #fff; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h3 style="font-size: 1rem; margin-bottom: 8px;">Painel admin - Lista cestas</h3>
+            <div id="containerAdminCestas" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; margin-bottom: 12px;">
+                <!-- Gerenciado via JS -->
             </div>
         </div>
 
-        <div class="menu-card" id="btnAdminCesta2">
-            <div class="menu-card-left">
-                <span class="menu-icon">📋</span>
-                <span>Gerenciar Cesta 2</span>
-            </div>
-            <span id="lockLista2">⏱️</span>
-        </div>
-
-        <div class="menu-card" id="btnAdminCesta3">
-            <div class="menu-card-left">
-                <span class="menu-icon">📋</span>
-                <span>Gerenciar Cesta 3</span>
-            </div>
-            <span id="lockLista3">⏱️</span>
-        </div>
-
-        <button class="home-icon-btn" id="btnVoltarTela3" style="margin-top: auto;">Página Inicial</button>
+        <button class="btn" id="navCriarNovoItem" style="background-color: var(--success);">Criar novo item</button>
+        <button class="btn" id="navCriarNovaCesta" style="background-color: var(--success);">Criar nova cesta</button>
+        <button class="btn" id="navCriarNovoTipoCesta" style="background-color: var(--success);">Criar novo tipo de cesta</button>
     </div>
 
-    <!-- TELA 4: Detalhes Admin / Lista de Contribuições -->
+    <!-- TELA 4: Gerenciamento Detalhado da Cesta Selecionada (Admin) -->
     <div id="tela4" class="screen">
-        <h2 id="tituloTela4">Gerenciamento - Cesta 1</h2>
-        
-        <div id="containerContribuicoesLista" style="flex: 1; overflow-y: auto; margin-bottom: 12px;"></div>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h2 id="tituloTela4">Gerenciamento - Cesta</h2>
+            <button class="btn btn-secondary" id="btnVoltarTela4" style="padding: 6px 12px; font-size: 0.85rem;">← Voltar</button>
+        </div>
 
-        <button class="btn-danger" id="btnResetar">Resetar itens da cesta</button>
-        <button class="home-icon-btn" id="btnVoltarTela4" style="margin-top: 8px;">Voltar para o Painel</button>
-    </div>
-
-    <!-- MODAL DE SUCESSO / PRINT -->
-    <div class="modal-overlay" id="modalPopup">
-        <div class="modal-content">
-            <h3>Sua contribuição foi registrada!</h3>
-            <p id="modalMensagemTexto">Não esqueça de tirar um print desta tela!</p>
-            <button class="btn-primary" id="btnFecharModal">Entendido</button>
+        <div style="background: #fff; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h3 style="font-size: 1rem; margin-bottom: 8px;">Contribuições Registradas:</h3>
+            <div id="containerContribuicoesLista" style="max-height: 250px; overflow-y: auto; margin-bottom: 12px;">
+                <!-- Lista via JS -->
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="btn btn-danger" id="btnResetar">Resetar itens da cesta</button>
+                <button class="btn btn-danger" id="btnExcluirCesta" style="background-color: #991b1b;">Excluir cesta</button>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL DE AVISOS / CONFIRMAÇÃO (Usando as classes do seu CSS) -->
-    <div class="custom-modal-overlay" id="customAlertModal">
-        <div class="custom-modal-box">
-            <h3 id="customAlertTitle">Atenção</h3>
-            <p id="customAlertMessage">Mensagem de aviso</p>
-            <button id="customAlertBtn">Entendido</button>
+    <!-- TELA 5: Criar Novo Item -->
+    <div id="telaCriarItem" class="screen">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h2>Criar novo item</h2>
+            <button class="btn btn-secondary" id="btnVoltarTelaItem" style="padding: 6px 12px; font-size: 0.85rem;">← Voltar</button>
+        </div>
+
+        <div style="background: #fff; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 6px;">Nome do item</label>
+            <input type="text" id="inputNomeNovoItem" placeholder="Ex: Farinha de rosca - 500g" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 12px;">
+            <button class="btn" id="btnSalvarNovoItem" style="width: 100%; background: var(--cinza-chumbo);">Criar</button>
+        </div>
+    </div>
+
+    <!-- TELA 6: Criar Novo Tipo de Cesta -->
+    <div id="telaCriarTipoCesta" class="screen">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h2>Criar novo tipo de cesta</h2>
+            <button class="btn btn-secondary" id="btnVoltarTelaTipoCesta" style="padding: 6px 12px; font-size: 0.85rem;">← Voltar</button>
+        </div>
+
+        <div style="background: #fff; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 6px;">Nome do novo tipo</label>
+            <input type="text" id="inputNomeNovoTipo" placeholder="Ex: Cesta de Natal" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 12px;">
+
+            <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 6px;">Selecione os itens para compor o tipo:</label>
+            <div id="containerCheckboxesItens" style="max-height: 180px; overflow-y: auto; border: 1px solid var(--border-color); padding: 8px; border-radius: 6px; margin-bottom: 12px;">
+                <!-- Lista de checkboxes gerada via JS -->
+            </div>
+
+            <button class="btn" id="btnSalvarNovoTipoCesta" style="width: 100%; background-color: var(--success);">Cadastrar novo tipo de cesta</button>
+        </div>
+    </div>
+
+    <!-- TELA 7: Criar Nova Cesta (Instância) -->
+    <div id="telaCriarCesta" class="screen">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h2>Criar nova cesta</h2>
+            <button class="btn btn-secondary" id="btnVoltarTelaCriarCesta" style="padding: 6px 12px; font-size: 0.85rem;">← Voltar</button>
+        </div>
+
+        <div style="background: #fff; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 6px;">Nome da cesta</label>
+            <input type="text" id="inputNomeNovaCestaInstancia" placeholder="Ex: Cesta Família Souza" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 12px;">
+
+            <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 6px;">Tipo de cesta</label>
+            <select id="selectTipoCestaModelo" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 12px;">
+                <!-- Opções carregadas via JS -->
+            </select>
+
+            <button class="btn" id="btnSalvarNovaCestaInstancia" style="width: 100%; background: var(--cinza-chumbo);">Criar cesta</button>
         </div>
     </div>
 
 </div>
 
-<script type="module" src="main.js"></script>
+<!-- Modal de Alerta / Confirmação Genérico -->
+<div id="customAlertModal" class="modal">
+    <div class="modal-content">
+        <h3 id="customAlertTitle">Aviso</h3>
+        <p id="customAlertMessage" style="font-size: 0.95rem; color: var(--text-muted);"></p>
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px;">
+            <button class="btn" id="customAlertBtn">OK</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Print / Sucesso -->
+<div id="modalPopup" class="modal">
+    <div class="modal-content">
+        <h3>Registro Concluído!</h3>
+        <p id="modalMensagemTexto" style="font-size: 0.9rem; line-height: 1.4;"></p>
+        <button class="btn" id="btnFecharModal" style="margin-top: 8px;">Entendido (Ir para Início)</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
