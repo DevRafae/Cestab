@@ -109,15 +109,21 @@ function renderizarTela1() {
             abrirCesta(cesta.id);
         };
 
-        card.innerHTML = `
+       card.innerHTML = `
             <div class="menu-card-left">
-                <span class="menu-icon">📦</span>
+                <!-- Ícone da Cesta Básica -->
+                <img src="images/box.png" class="menu-icon" style="width: 24px; height: 24px; vertical-align: middle;">
                 <span style="font-weight: 600;">${cesta.nome}</span>
             </div>
             <div>
-                ${isLocked ? '<span>⏱️</span>' : '<span style="font-size: 12px; color: var(--cinza-medio);">Disponível ➔</span>'}
+                ${isLocked ? 
+                    `<!-- Ícone do Relógio -->
+                     <img src="images/clock.png" class="menu-icon-lock" style="width: 18px; height: 18px; vertical-align: middle;">` : 
+                    '<span style="font-size: 12px; color: var(--cinza-medio);">Disponível ➔</span>'
+                }
             </div>
         `;
+
         container.appendChild(card);
     });
 }
@@ -250,7 +256,8 @@ function renderizarAdminCestasList() {
         card.style.padding = "10px 14px";
         card.innerHTML = `
             <div class="menu-card-left">
-                <span class="menu-icon">📦</span>
+               <img src="images/box.png" class="menu-icon" style="width: 24px; height: 24px; vertical-align: middle;">
+                <span style="font-weight: 600;">${cesta.nome}</span>
                 <span>${cesta.nome} ${isLocked ? '(Bloqueada)' : ''}</span>
             </div>
             <button class="btn" style="padding: 4px 10px; font-size: 0.8rem;" onclick="verDetalhesAdmin(${cesta.id})">Gerenciar</button>
