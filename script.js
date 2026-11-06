@@ -88,7 +88,7 @@ function renderizarTela1() {
     container.innerHTML = '';
 
     if (dadosCestas.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#666; padding: 10px;">Nenhuma cesta cadastrada na bandeja.</p>';
+        container.innerHTML = '<p style="text-align:center; color:#666; padding: 10px;">Nenhuma cesta cadastrada.</p>';
         return;
     }
 
@@ -191,7 +191,7 @@ async function registrarContribuicao() {
     let inputNome = document.getElementById('nomeColaborador');
     let nome = inputNome ? inputNome.value.trim() : '';
     if(!nome) {
-        mostrarAviso("Atenção", "Por favor, digite o seu nome e sobrenome.");
+        mostrarAviso("Atenção", "Por favor, digite o seu nome.");
         return;
     }
 
@@ -233,7 +233,7 @@ async function registrarContribuicao() {
     renderizarItensCestaAtiva();
     renderizarTela1();
 
-    let msgPopup = `Obrigado, <b>${nome}</b>!<br><br>Itens doados:<br><b>${itensFlegadosNomes.join('<br>')}</b><br><br>Não se esqueça de tirar um print desta tela para comprovação!`;
+    let msgPopup = `Deus abençoe, <b>${nome}</b>!<br><br>Itens doados:<br><b>${itensFlegadosNomes.join('<br>')}</b><br><br>Não esqueça de tirar um print desta tela!`;
     document.getElementById('modalMensagemTexto').innerHTML = msgPopup;
     document.getElementById('modalPopup').style.display = 'flex';
 }
@@ -292,7 +292,7 @@ function renderizarListaContribuicoesAdmin() {
         div.className = 'contribution-item';
         div.innerHTML = `
             <span><b>${c.nome}</b>: ${c.item}</span>
-            <button class="btn btn-danger" style="padding: 2px 8px; font-size: 0.8rem;" onclick="removerContribuicaoAdmin(${c.idUnico})">❌</button>
+            <button class="btn btn-danger" style="padding: 2px 8px; font-size: 0.8rem;" onclick="removerContribuicaoAdmin(${c.idUnico})"><img src="images/delete.png" class="menu-icon" style="width: 24px; height: 24px; vertical-align: middle;"></button>
         `;
         container.appendChild(div);
     });
