@@ -108,10 +108,13 @@ button:hover {
 }
 
 .btn-danger {
-    background: var(--danger);
+    background: transparent;
+    border: none;
+    color: var(--danger);
 }
 .btn-danger:hover {
     background: #b91c1c;
+    color: white;
 }
 
 .btn-secondary {
